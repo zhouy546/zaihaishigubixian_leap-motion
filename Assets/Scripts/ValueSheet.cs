@@ -8,6 +8,8 @@ public enum SelectionMune { Left,Right,Idle}
 
 public static class ValueSheet 
 {
+    public static bool UIAnimationLock = false;
+
     public static Dictionary<string, Videoinfo> udp_VideoinfoPairs = new Dictionary<string, Videoinfo>();
 
     public static Videoinfo currentOnPlayVideoInfo;

@@ -26,6 +26,8 @@ public class uiCtr : MonoBehaviour
         ValueSheet.currentUiNode = ValueSheet.currentUiNode.next;
 
         Debug.Log("当前选择ID："+ValueSheet.currentUiNode.id);
+
+        TitleCtr.instance.changeTitle(ValueSheet.currentUiNode.titleSprite);
     }
 
     private void moveRight()
@@ -33,6 +35,9 @@ public class uiCtr : MonoBehaviour
         ValueSheet.currentUiNode = ValueSheet.currentUiNode.pervious;
 
         Debug.Log("当前选择ID：" + ValueSheet.currentUiNode.id);
+
+        TitleCtr.instance.changeTitle(ValueSheet.currentUiNode.titleSprite);
+
     }
 
     private void HideUI()

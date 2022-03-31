@@ -7,7 +7,10 @@ public class MediaCtr : MonoBehaviour
 {
     public static MediaCtr instance;
 
+    public DisplayIMGUI displayIMGUI;
+
     MediaPlayer mediaplayer;
+
 
     private void Awake()
     {
@@ -20,7 +23,7 @@ public class MediaCtr : MonoBehaviour
         mediaplayer.Events.AddListener(MediaEvent);
 
         EventCenter.AddListener(EventDefine.ToVideoState, LoadVideo);
-
+        EventCenter.AddListener(EventDefine.ToSelectionState, stopVideo);
     }
     // Start is called before the first frame update
     void Start()
@@ -55,8 +58,17 @@ public class MediaCtr : MonoBehaviour
         return "null";
     }
 
+    private void stopVideo()
+    {
+        mediaplayer.Stop();
+
+        displayIMGUI._color = new Color(1, 1, 1, 0);
+    }
+
     public void LoadVideo()
     {
+        displayIMGUI._color = new Color(1, 1, 1, 1);
+
         ValueSheet.currentOnPlayVideoInfo = ValueSheet.udp_VideoinfoPairs[ValueSheet.currentUiNode.id.ToString()];
 
         mediaplayer.OpenVideoFromFile(MediaPlayer.FileLocation.RelativeToStreamingAssetsFolder, ValueSheet.currentOnPlayVideoInfo.url, true);

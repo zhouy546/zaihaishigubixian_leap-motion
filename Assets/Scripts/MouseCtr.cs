@@ -16,7 +16,7 @@ public class MouseCtr : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(ValueSheet.GameState);
+       // Debug.Log(ValueSheet.GameState);
 
         if (ValueSheet.GameState == State.Selection)
         {

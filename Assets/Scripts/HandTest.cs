@@ -64,7 +64,7 @@ public class HandTest : HandModelBase
         }
         else if (ValueSheet.GameState == State.VideoPlay)
         {
-
+            videoPlayeMouseMovenent(LeapHand.PalmVelocity.x, LeapHand.GrabStrength);
         }
         
     }
@@ -90,32 +90,52 @@ public class HandTest : HandModelBase
 
     private void SelectionMouseMovement(float velocityX,float grab)
     {
-        if (Utility.moveDirection(velocityX) == SelectionMune.Right && !mouseCoolDown)
+        if (!ValueSheet.UIAnimationLock)
         {
+            if (Utility.moveDirection(velocityX) == SelectionMune.Right && !mouseCoolDown)
+            {
 
-             Debug.Log("right");
-            Utility.MoveRight();
-            mouseCoolDown = true;
+                Debug.Log("right");
+                Utility.MoveRight();
+                mouseCoolDown = true;
+            }
+            else if (Utility.moveDirection(velocityX) == SelectionMune.Left && !mouseCoolDown)
+            {
+
+                //MediaCtr.instance.LoadVideo(ValueSheet.udp_VideoinfoPairs["1"]);
+
+                Debug.Log("left");
+                Utility.MoveLeft();
+                mouseCoolDown = true;
+            }
+
+            else if (Utility.IsGrab(grab) && !mouseCoolDown)
+            {
+                EventCenter.Broadcast(EventDefine.ToVideoState);
+                Debug.Log("submit");
+                //submit
+                mouseCoolDown = true;
+            }
+
+            else if (Utility.moveDirection(velocityX) == SelectionMune.Idle && !Utility.IsGrab(grab) && mouseCoolDown)
+            {
+                Debug.Log("IDLE");
+                mouseCoolDown = false;
+            }
         }
-        else if (Utility.moveDirection(velocityX) == SelectionMune.Left && !mouseCoolDown)
+      
+    }
+
+    private void videoPlayeMouseMovenent(float velocityX, float grab)
+    {
+        if (Utility.IsGrab(grab) && !mouseCoolDown)
         {
-
-            //MediaCtr.instance.LoadVideo(ValueSheet.udp_VideoinfoPairs["1"]);
-
-            Debug.Log("left");
-            Utility.MoveLeft();
-            mouseCoolDown = true;
-        }
-
-        else if(Utility.IsGrab(grab) && !mouseCoolDown)
-        {
-            EventCenter.Broadcast(EventDefine.ToVideoState);
+            EventCenter.Broadcast(EventDefine.ToSelectionState);
             Debug.Log("submit");
             //submit
             mouseCoolDown = true;
         }
-
-        else if (Utility.moveDirection(velocityX) == SelectionMune.Idle&& !Utility.IsGrab(grab) && mouseCoolDown)
+        else if (Utility.moveDirection(velocityX) == SelectionMune.Idle && !Utility.IsGrab(grab) && mouseCoolDown)
         {
             Debug.Log("IDLE");
             mouseCoolDown = false;
@@ -124,7 +144,21 @@ public class HandTest : HandModelBase
     // Update is called once per frame
     void Update()
     {
-        
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            if (Chirality == Chirality.Left && !ValueSheet.UIAnimationLock)
+            {
+                Utility.MoveRight();
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftArrow) && !ValueSheet.UIAnimationLock)
+        {
+            if (Chirality == Chirality.Left)
+            {
+                Utility.MoveLeft();
+            }
+        }
     }
 
     public void ResetHand(bool forceReset = false)
